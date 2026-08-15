@@ -8,7 +8,9 @@ RM          = rm -f
 
 SRCS        = push_swap.c	\
             stack_manipulation_tools.c	\
-			ststack_creation_tools.c.c
+			stack_creation_tools.c \
+			rotate.c \
+			reverse_rotate.c
 
 OBJS        = $(SRCS:.c=.o)
 
