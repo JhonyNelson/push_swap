@@ -29,7 +29,42 @@ This allows O(1) time complexity for both top and bottom stack operations, which
 
 ---
 
-### 2. Disorder Metric — `compute_disorder`
+### 2. Project Architecture
+
+The project is organized by responsibility to keep parsing, stack management,
+operations, metrics, and sorting algorithms separated:
+
+```text
+.
+├── include/
+│   └── push_swap.h
+├── src/
+│   ├── main.c
+│   ├── stack/
+│   │   ├── stack_creation_tools.c
+│   │   └── stack_manipulation_tools.c
+│   ├── operations/
+│   │   ├── swap.c
+│   │   ├── push.c
+│   │   ├── rotate.c
+│   │   └── reverse_rotate.c
+│   ├── parsing/
+│   ├── metrics/
+│   └── sorting/
+├── libft/
+├── Makefile
+├── README.md
+└── ROADMAP.md
+```
+
+The `operations` layer is the only layer that modifies the stacks directly.
+Sorting algorithms use those operations rather than manipulating list pointers.
+The `parsing`, `metrics`, and `sorting` directories receive their respective
+files as those modules are implemented.
+
+---
+
+### 3. Disorder Metric — `compute_disorder`
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -47,7 +82,7 @@ A value closer to `0` represents a stack that is closer to being sorted, while a
 
 ---
 
-### 3. Indexing — `assign_index`
+### 4. Indexing — `assign_index`
 
 For the Radix Sort to handle negative numbers properly, the original values are mapped to positive indexes.
 
@@ -65,7 +100,7 @@ The Radix algorithm then operates on the binary representation of these indexes 
 
 ---
 
-### 4. The Four Strategies
+### 5. The Four Strategies
 
 #### Simple — O(n²)
 
