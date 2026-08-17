@@ -1,16 +1,18 @@
 NAME        = push_swap
 LIBFT_DIR   = ./libft
 LIBFT       = $(LIBFT_DIR)/libft.a
+SRC_DIR     = src
+INCLUDE_DIR = include
 
 CC          = cc
-CFLAGS      = -Wall -Wextra -Werror -I./libft -I.
+CFLAGS      = -Wall -Wextra -Werror -I./libft -I$(INCLUDE_DIR)
 RM          = rm -f
 
-SRCS        = push_swap.c	\
-            stack_manipulation_tools.c	\
-			stack_creation_tools.c \
-			rotate.c \
-			reverse_rotate.c
+SRCS        = $(SRC_DIR)/main.c	\
+			$(SRC_DIR)/stack/stack_manipulation_tools.c	\
+			$(SRC_DIR)/stack/stack_creation_tools.c \
+			$(SRC_DIR)/operations/rotate.c \
+			$(SRC_DIR)/operations/reverse_rotate.c
 
 OBJS        = $(SRCS:.c=.o)
 
