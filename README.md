@@ -29,7 +29,78 @@ This allows O(1) time complexity for both top and bottom stack operations, which
 
 ---
 
-### 2. Disorder Metric — `compute_disorder`
+### 2. Project Architecture
+
+The project is organized by responsibility. Each layer has one job, which keeps
+pointer management isolated from the sorting algorithms:
+
+```text
+.
+├── include/
+│   └── push_swap.h
+├── src/
+│   ├── main.c
+│   ├── stack/
+│   │   ├── nodes.c
+│   │   └── list.c
+│   ├── parsing/
+│   │   ├── validation.c
+│   │   └── stack_init.c
+│   ├── operations/
+│   │   ├── swap.c
+│   │   ├── push.c
+│   │   ├── rotate.c
+│   │   └── reverse_rotate.c
+│   ├── metrics/
+│   │   ├── index.c
+│   │   └── disorder.c
+│   └── sorting/
+│       ├── small_sort.c
+│       ├── simple_sort.c
+│       ├── medium_sort.c
+│       ├── complex_sort.c
+│       └── adaptive_sort.c
+├── libft/
+├── Makefile
+├── README.md
+└── ROADMAP.md
+```
+
+#### Layer responsibilities
+
+| Layer | Responsibility | Functions |
+|---|---|---|
+| `main.c` | Coordinates parsing, setup, sorting and cleanup. | `main` |
+| `stack/nodes.c` | Creates a stack node. | `ft_new_node` |
+| `stack/list.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front`, `ft_stacksize`, `ft_freestack` |
+| `parsing/validation.c` | Validates numeric input and duplicates. | `ft_isdigit_str`, `ft_check_args`, `ft_check_duplicates` |
+| `parsing/stack_init.c` | Creates stack A from validated arguments. | `init_stack` |
+| `operations/*.c` | Performs and prints the allowed `push_swap` instructions. | `sa`/`sb`/`ss`, `pa`/`pb`, `ra`/`rb`/`rr`, `rra`/`rrb`/`rrr` |
+| `metrics/*.c` | Builds relative indexes and measures disorder. | `assign_index`, `compute_disorder` |
+| `sorting/*.c` | Sorts using only the operations layer. | `sort_3`, `sort_5`, `simple_sort`, `medium_sort`, `complex_sort`, `adaptive_sort` |
+
+#### Current implementation status
+
+Currently, `src/stack/stack_creation_tools.c` combines node creation, stack
+initialization, cleanup and size calculation. `src/stack/stack_manipulation_tools.c`
+contains the linked-list insertion helpers. This is functional, but the target
+architecture above separates parsing from stack internals as the project grows.
+
+The operation files `swap.c`, `push.c`, `rotate.c` and `reverse_rotate.c`
+implement all Day 2 stack operations.
+
+`validation.c`, `stack_init.c`, the metrics files and the sorting files should
+be created only when their corresponding functions are implemented. In
+particular, `ft_check_args` currently lives in `libft`; it should be moved to
+`src/parsing/validation.c` when the parsing module is consolidated.
+
+The `operations` layer is the only layer that modifies stack pointers.
+Sorting algorithms must use those operations rather than manipulating the
+linked list directly.
+
+---
+
+### 3. Disorder Metric — `compute_disorder`
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -47,7 +118,7 @@ A value closer to `0` represents a stack that is closer to being sorted, while a
 
 ---
 
-### 3. Indexing — `assign_index`
+### 4. Indexing — `assign_index`
 
 For the Radix Sort to handle negative numbers properly, the original values are mapped to positive indexes.
 
@@ -65,7 +136,7 @@ The Radix algorithm then operates on the binary representation of these indexes 
 
 ---
 
-### 4. The Four Strategies
+### 5. The Four Strategies
 
 #### Simple — O(n²)
 
