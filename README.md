@@ -20,7 +20,7 @@ truth for what is available in the current codebase.
 |---|---|---|
 | Build and Libft | Done | Compiles with `-Wall -Wextra -Werror`. |
 | Stack structure | Done | Doubly linked list, creation, insertion, size and cleanup. |
-| Parsing | Partial | Integer range validation and duplicate checks are implemented; flags and final CLI parsing are pending. |
+| Parsing | Partial | Quoted input, integer range validation and duplicate checks are implemented; flags and final CLI parsing are pending. |
 | Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
 | `assign_index` | Done | Assigns a relative index without changing stack order. |
 | Small sorts | Partial | `sort_3` is implemented; `sort_5` is pending. |
@@ -312,6 +312,15 @@ at the project root.
 ## 2. Usage (final version)
 
 Run the program with a list of integers as arguments.
+
+The input may be split into normal arguments, one quoted string, or a mixture
+of both:
+
+```bash
+./push_swap 4 67 3
+./push_swap "4 67 3"
+./push_swap "4 67" 3
+```
 
 Optional flags can be passed before the numbers.
 

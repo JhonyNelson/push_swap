@@ -31,12 +31,19 @@ static int	print_error(void)
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
+	t_input	input;
 
 	if (argc < 2)
 		return (0);
-	if (!validate_numbers(argc, argv, 1))
+	if (!normalize_args(argc - 1, argv + 1, &input))
 		return (print_error());
-	stack_a = init_stack(argc, argv);
+	if (!validate_numbers(input.count, input.values, 0))
+	{
+		free_input(&input);
+		return (print_error());
+	}
+	stack_a = init_stack(input.count, input.values);
+	free_input(&input);
 	if (!stack_a || !ft_check_duplicates(stack_a))
 	{
 		ft_freestack(&stack_a);

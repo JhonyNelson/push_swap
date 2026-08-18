@@ -26,6 +26,12 @@ typedef struct s_stack
 	struct s_stack	*next;
 }					t_stack;
 
+typedef struct s_input
+{
+	char			**values;
+	int				count;
+}					t_input;
+
 /* ================= FUNÇÕES BASE ================= */
 
 t_stack				*ft_new_node(int value);
@@ -41,7 +47,9 @@ int					ft_check_args(int argc, char **argv, int first);
 int					parse_int(const char *str, int *value);
 int					validate_numbers(int argc, char **argv, int first);
 int					ft_check_duplicates(t_stack *stack);
-t_stack				*init_stack(int argc, char **argv);
+int					normalize_args(int argc, char **argv, t_input *input);
+void				free_input(t_input *input);
+t_stack				*init_stack(int count, char **values);
 
 /* ================ MOVIMENTOS (OPERATIONS) ================ */
 /* Swap */

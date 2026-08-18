@@ -18,7 +18,7 @@ static int	parse_digits(const char *str, long *result, long limit)
 
 	while (*str)
 	{
-		if (*str < '0' || *str > '9')
+		if (!ft_isdigit(*str))
 			return (0);
 		digit = *str - '0';
 		if (*result > (limit - digit) / 10)
