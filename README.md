@@ -94,7 +94,7 @@ pointer management isolated from the sorting algorithms:
 | `main.c` | Coordinates parsing, setup, sorting and cleanup. | `main` |
 | `stack/stack_creation_tools.c` | Creates nodes, initializes and frees stacks. | `ft_new_node`, `init_stack`, `ft_stacksize`, `ft_freestack` |
 | `stack/stack_manipulation_tools.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front` |
-| `parsing/validation.c` | Validates numeric input and duplicates. | `ft_isdigit_str`, `ft_check_args`, `ft_check_duplicates` |
+| `parsing/input_validation.c` | Validates numeric input, range and duplicates. | `ft_str_is_digit`, `ft_check_args`, `parse_int`, `validate_numbers`, `ft_check_duplicates` |
 | `parsing/stack_init.c` | Creates stack A from validated arguments. | `init_stack` |
 | `operations/*.c` | Performs and prints the allowed `push_swap` instructions. | `sa`/`sb`/`ss`, `pa`/`pb`, `ra`/`rb`/`rr`, `rra`/`rrb`/`rrr` |
 | `metrics/*.c` | Builds relative indexes and measures disorder. | `assign_index`, `compute_disorder` |

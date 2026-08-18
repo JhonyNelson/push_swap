@@ -37,7 +37,7 @@ void				ft_freestack(t_stack **stack);
 
 /* ================ PARSING & ERROS ================ */
 int					ft_isdigit_str(char *c);
-int					ft_check_args(int argc, char **argv);
+int					ft_check_args(int argc, char **argv, int first);
 int					parse_int(const char *str, int *value);
 int					validate_numbers(int argc, char **argv, int first);
 int					ft_check_duplicates(t_stack *stack);

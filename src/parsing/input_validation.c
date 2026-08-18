@@ -60,7 +60,7 @@ int	validate_numbers(int argc, char **argv, int first)
 {
 	int	value;
 
-	if (first >= argc)
+	if (!ft_check_args(argc, argv, first))
 		return (0);
 	while (first < argc)
 	{
