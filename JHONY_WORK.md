@@ -176,6 +176,21 @@ O `medium_sort` divide os índices em faixas, chamadas *chunks*. A parte do
 Guilherme envia os índices de cada faixa de A para B. A parte do Jhony recebe B
 e precisa devolvê-la para A em ordem.
 
+O contrato compartilhado definido no header é:
+
+```c
+int	medium_chunk_size(int size);
+void	medium_push_chunks(t_stack **a, t_stack **b, int chunk_size);
+void	medium_restore(t_stack **a, t_stack **b);
+```
+
+`medium_chunk_size` calcula `ceil(sqrt(n))` sem usar a biblioteca matemática.
+`medium_push_chunks` já foi implementada pelo Guilherme. Ela espera índices
+calculados por `assign_index`, recebe o tamanho do chunk e deixa A vazia. Ao
+enviar a metade menor de cada chunk, ela aplica `rb` para manter esses valores
+mais abaixo em B. O Jhony deve implementar `medium_restore`, consumindo B até
+ela ficar vazia e deixando A ordenada.
+
 Uma abordagem comum:
 
 1. Localizar o maior índice presente em B.

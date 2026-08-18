@@ -18,6 +18,7 @@ SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/metrics/index.c \
 			$(SRC_DIR)/sorting/simple_sort.c \
 			$(SRC_DIR)/sorting/complex_sort.c \
+			$(SRC_DIR)/sorting/medium_chunks.c \
 			$(SRC_DIR)/sorting/small_sort.c
 
 OBJS        = $(SRCS:.c=.o)

@@ -262,7 +262,10 @@ O checker deve responder `OK`.
 
 ### Responsabilidades do Guilherme
 
-- Implementar a parte principal de `medium_sort` (chunks e envio de A para B).
+- `medium_chunk_size`: calcular `ceil(sqrt(n))` sem usar `sqrt`.
+- `medium_push_chunks`: enviar os chunks de A para B.
+- Integrar essas funções em `medium_sort` quando `medium_restore` estiver
+  disponível.
 - Implementar o benchmark `--bench` após a integração do `main`.
 
 ### Responsabilidades do Jhony
