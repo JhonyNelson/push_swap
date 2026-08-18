@@ -11,11 +11,17 @@ RM          = rm -f
 SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/stack/stack_manipulation_tools.c	\
 			$(SRC_DIR)/stack/stack_creation_tools.c \
+			$(SRC_DIR)/parsing/input_validation.c \
+			$(SRC_DIR)/parsing/input_normalization.c \
 			$(SRC_DIR)/operations/swap.c \
 			$(SRC_DIR)/operations/push.c \
 			$(SRC_DIR)/operations/rotate.c \
 			$(SRC_DIR)/operations/reverse_rotate.c \
 			$(SRC_DIR)/metrics/disorder.c \
+			$(SRC_DIR)/metrics/index.c \
+			$(SRC_DIR)/sorting/simple_sort.c \
+			$(SRC_DIR)/sorting/complex_sort.c \
+			$(SRC_DIR)/sorting/medium_blocks.c \
 			$(SRC_DIR)/sorting/small_sort.c
 
 OBJS        = $(SRCS:.c=.o)

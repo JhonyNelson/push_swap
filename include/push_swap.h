@@ -14,6 +14,7 @@
 # define PUSH_SWAP_H
 
 # include "libft.h"
+# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -24,6 +25,12 @@ typedef struct s_stack
 	struct s_stack	*prev;
 	struct s_stack	*next;
 }					t_stack;
+
+typedef struct s_input
+{
+	char			**values;
+	int				count;
+}					t_input;
 
 /* ================= FUNÇÕES BASE ================= */
 
@@ -36,9 +43,13 @@ void				ft_freestack(t_stack **stack);
 
 /* ================ PARSING & ERROS ================ */
 int					ft_isdigit_str(char *c);
-int					ft_check_args(int argc, char **argv);
+int					ft_check_args(int argc, char **argv, int first);
+int					parse_int(const char *str, int *value);
+int					validate_numbers(int argc, char **argv, int first);
 int					ft_check_duplicates(t_stack *stack);
-t_stack				*init_stack(int argc, char **argv);
+int					normalize_args(int argc, char **argv, t_input *input);
+void				free_input(t_input *input);
+t_stack				*init_stack(int count, char **values);
 
 /* ================ MOVIMENTOS (OPERATIONS) ================ */
 /* Swap */
@@ -78,6 +89,10 @@ void				simple_sort(t_stack **a, t_stack **b);
 
 /* 2. Médio O(n*sqrt(n)) */
 void				medium_sort(t_stack **a, t_stack **b);
+int					medium_block_size(int size);
+void				medium_push_blocks(t_stack **a, t_stack **b,
+						int block_size);
+void				medium_restore(t_stack **a, t_stack **b);
 
 /* 3. Complexo O(n log n) - Ex: Radix */
 void				complex_sort(t_stack **a, t_stack **b);

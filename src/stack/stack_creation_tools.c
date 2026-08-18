@@ -26,16 +26,23 @@ t_stack	*ft_new_node(int value)
 	return (new_node);
 }
 
-t_stack	*init_stack(int argc, char **argv)
+t_stack	*init_stack(int count, char **values)
 {
 	t_stack	*stack_a;
+	t_stack	*new_node;
 	int		i;
 
 	stack_a = NULL;
-	i = 1;
-	while (i < argc)
+	i = 0;
+	while (i < count)
 	{
-		ft_stackadd_back(&stack_a, ft_new_node(ft_atoi(argv[i])));
+		new_node = ft_new_node(ft_atoi(values[i]));
+		if (!new_node)
+		{
+			ft_freestack(&stack_a);
+			return (NULL);
+		}
+		ft_stackadd_back(&stack_a, new_node);
 		i++;
 	}
 	return (stack_a);

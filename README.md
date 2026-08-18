@@ -10,9 +10,30 @@ In this version (v1.1), the project goes beyond simple sorting: we must implemen
 
 ---
 
-## Algorithm & Technical Choices
+## Project Status
 
-The implementation is structured around data structure management, disorder calculation, and the four required algorithmic strategies.
+This README describes the final architecture and intended behavior for version
+1.1. The project is still under development; the table below is the source of
+truth for what is available in the current codebase.
+
+| Module | Status | Notes |
+|---|---|---|
+| Build and Libft | Done | Compiles with `-Wall -Wextra -Werror`. |
+| Stack structure | Done | Doubly linked list, creation, insertion, size and cleanup. |
+| Parsing | Partial | Quoted input, integer range validation and duplicate checks are implemented; flags and final CLI parsing are pending. |
+| Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
+| `assign_index` | Done | Assigns a relative index without changing stack order. |
+| Small sorts | Partial | `sort_3` is implemented; `sort_5` is pending. |
+| Disorder and strategies | Partial | `simple_sort` and `complex_sort` are implemented; `compute_disorder`, `medium` and `adaptive` are pending. |
+| CLI and benchmark | Pending | Flags, operation counter and benchmark output are not available yet. |
+| Main integration | Pending | `main` still prints the input stack for development. |
+
+---
+
+## Final Architecture & Technical Choices
+
+The final implementation is structured around data structure management,
+disorder calculation and four sorting strategies.
 
 ### 1. Data Structure — Doubly Linked List
 
@@ -41,8 +62,8 @@ pointer management isolated from the sorting algorithms:
 ├── src/
 │   ├── main.c
 │   ├── stack/
-│   │   ├── nodes.c
-│   │   └── list.c
+│   │   ├── stack_creation_tools.c
+│   │   └── stack_manipulation_tools.c
 │   ├── parsing/
 │   │   ├── validation.c
 │   │   └── stack_init.c
@@ -71,36 +92,61 @@ pointer management isolated from the sorting algorithms:
 | Layer | Responsibility | Functions |
 |---|---|---|
 | `main.c` | Coordinates parsing, setup, sorting and cleanup. | `main` |
-| `stack/nodes.c` | Creates a stack node. | `ft_new_node` |
-| `stack/list.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front`, `ft_stacksize`, `ft_freestack` |
-| `parsing/validation.c` | Validates numeric input and duplicates. | `ft_isdigit_str`, `ft_check_args`, `ft_check_duplicates` |
+| `stack/stack_creation_tools.c` | Creates nodes, initializes and frees stacks. | `ft_new_node`, `init_stack`, `ft_stacksize`, `ft_freestack` |
+| `stack/stack_manipulation_tools.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front` |
+| `parsing/input_validation.c` | Validates numeric input, range and duplicates. | `ft_str_is_digit`, `ft_check_args`, `parse_int`, `validate_numbers`, `ft_check_duplicates` |
 | `parsing/stack_init.c` | Creates stack A from validated arguments. | `init_stack` |
 | `operations/*.c` | Performs and prints the allowed `push_swap` instructions. | `sa`/`sb`/`ss`, `pa`/`pb`, `ra`/`rb`/`rr`, `rra`/`rrb`/`rrr` |
 | `metrics/*.c` | Builds relative indexes and measures disorder. | `assign_index`, `compute_disorder` |
 | `sorting/*.c` | Sorts using only the operations layer. | `sort_3`, `sort_5`, `simple_sort`, `medium_sort`, `complex_sort`, `adaptive_sort` |
 
-#### Current implementation status
-
-Currently, `src/stack/stack_creation_tools.c` combines node creation, stack
-initialization, cleanup and size calculation. `src/stack/stack_manipulation_tools.c`
-contains the linked-list insertion helpers. This is functional, but the target
-architecture above separates parsing from stack internals as the project grows.
-
-The operation files `swap.c`, `push.c`, `rotate.c` and `reverse_rotate.c`
-implement all Day 2 stack operations.
-
-`validation.c`, `stack_init.c`, the metrics files and the sorting files should
-be created only when their corresponding functions are implemented. In
-particular, `ft_check_args` currently lives in `libft`; it should be moved to
-`src/parsing/validation.c` when the parsing module is consolidated.
-
-The `operations` layer is the only layer that modifies stack pointers.
-Sorting algorithms must use those operations rather than manipulating the
-linked list directly.
+The `operations` layer uses the stack helpers to perform the allowed
+instructions. Sorting algorithms must use those operations rather than
+manipulating the linked list directly.
 
 ---
 
-### 3. Disorder Metric — `compute_disorder`
+### 3. Push_swap Instruction Set
+
+The program may print only the following instructions to `stdout`. The `ft_*`
+functions are internal helpers; the names below are the actual Push_swap
+language consumed by the checker.
+
+| Instruction | Meaning |
+|---|---|
+| `sa` | Swaps the first two elements of A. |
+| `sb` | Swaps the first two elements of B. |
+| `ss` | Executes `sa` and `sb` together. |
+| `pa` | Moves the top element of B to the top of A. |
+| `pb` | Moves the top element of A to the top of B. |
+| `ra` | Moves the top of A to its bottom. |
+| `rb` | Moves the top of B to its bottom. |
+| `rr` | Executes `ra` and `rb` together. |
+| `rra` | Moves the bottom of A to its top. |
+| `rrb` | Moves the bottom of B to its top. |
+| `rrr` | Executes `rra` and `rrb` together. |
+
+An instruction that cannot change its target stack, such as `sa` on a stack
+with fewer than two elements, leaves that stack unchanged.
+
+### 4. How the Algorithms Use the Instructions
+
+The algorithms build a program from the instruction set above. They never
+change list pointers directly.
+
+- `simple_sort` repeatedly brings the minimum value of A to the top with `ra`
+  or `rra`, sends it to B with `pb`, sorts the final three elements, then uses
+  `pa` to rebuild A in ascending order.
+- `medium_sort` divides the indexes into blocks. Each block is sent from A to
+  B with `pb` and `ra`; B is then recovered in descending-index order with
+  `rb`/`rrb` and `pa`.
+- `complex_sort` uses Radix LSD on `index`: a `0` bit uses `pb`, a `1` bit
+  uses `ra`, and every pass ends by bringing B back with `pa`.
+- `adaptive_sort` selects one of the strategies based on the disorder metric.
+
+---
+
+### 5. Disorder Metric — `compute_disorder` (planned)
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -118,7 +164,7 @@ A value closer to `0` represents a stack that is closer to being sorted, while a
 
 ---
 
-### 4. Indexing — `assign_index`
+### 6. Indexing — `assign_index`
 
 For the Radix Sort to handle negative numbers properly, the original values are mapped to positive indexes.
 
@@ -136,7 +182,7 @@ The Radix algorithm then operates on the binary representation of these indexes 
 
 ---
 
-### 5. The Four Strategies
+### 7. The Four Strategies
 
 #### Simple — O(n²)
 
@@ -151,11 +197,13 @@ The algorithm:
 
 This strategy prioritizes simplicity over the number of operations.
 
+Status: implemented in `src/sorting/simple_sort.c`.
+
 ---
 
 #### Medium — O(n√n)
 
-A chunk-based sorting strategy.
+A block-based sorting strategy.
 
 The stack is divided into blocks with a size based on `sqrt(n)`.
 
@@ -179,6 +227,8 @@ For each bit:
 
 Because the algorithm works with the indexes generated by `assign_index`, negative input values are handled correctly.
 
+Status: implemented in `src/sorting/complex_sort.c` using LSD Radix Sort.
+
 ---
 
 #### Adaptive
@@ -199,9 +249,9 @@ This allows the program to adapt its behavior to the initial state of the input 
 
 ---
 
-## Edge Cases
+## Edge Cases for the Final Version
 
-The following cases are handled:
+The final program must handle the following cases:
 
 - Non-integer arguments.
 - Values exceeding `INT_MAX`.
@@ -213,7 +263,7 @@ The following cases are handled:
 - Negative numbers.
 - Inputs containing only 2 or 3 elements.
 
-Invalid input prints:
+For invalid input, the final program prints:
 
 ```text
 Error
@@ -223,7 +273,8 @@ to `stderr`.
 
 Empty input or `argc < 2` exits silently.
 
-For inputs of size 2 or 3, hardcoded optimal sequences are used to minimize the number of operations.
+For inputs of size 2 or 3, hardcoded optimal sequences are used to minimize
+the number of operations. Currently, `sort_3` is available.
 
 ---
 
@@ -239,7 +290,7 @@ Compilation follows the strict 42 rules with:
 
 ## 1. Compilation
 
-Clone the repository, including the `libft` submodule, and run:
+Clone the repository and run:
 
 ```bash
 make
@@ -258,11 +309,23 @@ at the project root.
 
 ---
 
-## 2. Usage
+## 2. Usage (final version)
 
 Run the program with a list of integers as arguments.
 
+The input may be split into normal arguments, one quoted string, or a mixture
+of both:
+
+```bash
+./push_swap 4 67 3
+./push_swap "4 67 3"
+./push_swap "4 67" 3
+```
+
 Optional flags can be passed before the numbers.
+
+> **Current limitation:** the flags and sorting integration below describe the
+> final interface. They are not implemented in the current executable yet.
 
 ### Flags
 
@@ -302,6 +365,54 @@ Test invalid input:
 
 ---
 
+## 3. Validation with the Provided Checkers
+
+The provided checkers validate the operation stream generated by `push_swap`.
+They receive the original numbers as arguments and read the operations from
+standard input. They print `OK` when stack A ends sorted in ascending order and
+stack B is empty; otherwise, they print `KO`.
+
+Choose the checker for the operating system where you are testing:
+
+| File | Platform |
+|---|---|
+| `checker_linux` | GNU/Linux x86_64 |
+| `fedora_checker` | Fedora Linux x86_64 |
+| `checker_Mac` | macOS Intel x86_64 |
+
+Only one checker is needed for a test. On Linux, use `checker_linux` unless
+you are specifically testing on Fedora. The macOS checker cannot run on Linux;
+on Apple Silicon Macs it may require Rosetta.
+
+Set the path to the suitable checker and pipe the operations into it:
+
+```bash
+ARG="4 67 3 87 23"
+CHECKER=/path/to/checker_linux
+./push_swap $ARG | $CHECKER $ARG
+```
+
+The expected result is:
+
+```text
+OK
+```
+
+To count operations while validating a strategy, run:
+
+```bash
+ARG="4 67 3 87 23"
+./push_swap --complex $ARG | tee /tmp/push_swap_operations | $CHECKER $ARG
+wc -l /tmp/push_swap_operations
+```
+
+The checker verifies the final stack state; it does not replace tests for
+parsing, memory leaks, operation counts or the required benchmark output.
+When `--bench` is implemented, its metrics must go to `stderr`, so they do not
+interfere with the operation stream consumed by the checker.
+
+---
+
 # Resources
 
 - **`man 3 atoi`** — Original function specification used as a reference during parsing.
@@ -312,15 +423,10 @@ Test invalid input:
 
 ## AI Usage
 
-AI was used strictly as a **Socratic tutor** throughout this project. It was never asked to generate ready-to-use code.
-
-Instead, AI guided the reasoning process through questions by:
+AI assisted the project as a tutor and code-review companion by:
 
 - Pointing out potential bugs.
 - Explaining why a given pointer manipulation was incorrect.
-- Asking the students to identify and fix issues independently.
-- Assisting with the conceptual understanding of bitwise operators in Radix Sort.
-- Explaining complexity analysis of stack operations.
-- Helping structure and review the README.
-
-**All code was written by the students.**
+- Explaining data structures, stack operations and algorithmic trade-offs.
+- Reviewing pointer handling, memory management and Norminette constraints.
+- Assisting with project structure and README documentation.

@@ -1,26 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_check_args.c                                    :+:      :+:    :+:   */
+/*   index.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: guilherme <guilherme@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/13 00:10:38 by guilherme         #+#    #+#             */
-/*   Updated: 2026/08/13 00:14:58 by guilherme        ###   ########.fr       */
+/*   Created: 2026/08/17 21:05:00 by guilherme         #+#    #+#             */
+/*   Updated: 2026/08/17 21:05:00 by guilherme        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "push_swap.h"
 
-int	ft_check_args(int argc, char **argv, int first)
+void	assign_index(t_stack **stack_a)
 {
-	if (first >= argc)
-		return (0);
-	while (first < argc)
+	t_stack	*current;
+	t_stack	*compare;
+	int		index;
+
+	if (!stack_a || !*stack_a)
+		return ;
+	current = *stack_a;
+	while (current)
 	{
-		if (!ft_str_is_digit(argv[first]))
-			return (0);
-		first++;
+		index = 0;
+		compare = *stack_a;
+		while (compare)
+		{
+			if (compare->value < current->value)
+				index++;
+			compare = compare->next;
+		}
+		current->index = index;
+		current = current->next;
 	}
-	return (1);
 }
