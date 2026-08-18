@@ -14,6 +14,7 @@
 # define PUSH_SWAP_H
 
 # include "libft.h"
+# include <limits.h>
 # include <stdlib.h>
 # include <unistd.h>
 
@@ -37,6 +38,8 @@ void				ft_freestack(t_stack **stack);
 /* ================ PARSING & ERROS ================ */
 int					ft_isdigit_str(char *c);
 int					ft_check_args(int argc, char **argv);
+int					parse_int(const char *str, int *value);
+int					validate_numbers(int argc, char **argv, int first);
 int					ft_check_duplicates(t_stack *stack);
 t_stack				*init_stack(int argc, char **argv);
 

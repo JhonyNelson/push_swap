@@ -22,17 +22,27 @@ void	ft_print_stack(t_stack *stack)
 	}
 }
 
+static int	print_error(void)
+{
+	ft_putstr_fd("Error\n", 2);
+	return (1);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
 
 	if (argc < 2)
 		return (0);
-	if (!ft_check_args(argc, argv))
-	{
-		ft_putstr_fd("Error\n", 2);
-		return (0);
-	}
+	if (!validate_numbers(argc, argv, 1))
+		return (print_error());
 	stack_a = init_stack(argc, argv);
+	if (!stack_a || !ft_check_duplicates(stack_a))
+	{
+		ft_freestack(&stack_a);
+		return (print_error());
+	}
 	ft_print_stack(stack_a);
+	ft_freestack(&stack_a);
+	return (0);
 }

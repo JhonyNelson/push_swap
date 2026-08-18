@@ -165,8 +165,10 @@ O subject pede quatro seletores de estratégia e um modo de benchmark:
 | `--bench` | ativa métricas no `stderr` depois da ordenação |
 
 `parse_flags` precisa separar flags dos números, escolher uma estratégia padrão
-quando não houver seletor e rejeitar uma flag desconhecida como erro. A saída
-das operações continua no `stdout`; benchmark e erros vão para `stderr`.
+quando não houver seletor e rejeitar uma flag desconhecida como erro. Depois de
+identificar onde começam os números, ela deve chamar
+`validate_numbers(argc, argv, first)`. A saída das operações continua no
+`stdout`; benchmark e erros vão para `stderr`.
 
 ---
 

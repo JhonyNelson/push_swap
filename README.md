@@ -20,7 +20,7 @@ truth for what is available in the current codebase.
 |---|---|---|
 | Build and Libft | Done | Compiles with `-Wall -Wextra -Werror`. |
 | Stack structure | Done | Doubly linked list, creation, insertion, size and cleanup. |
-| Parsing | Partial | Basic argument validation exists; duplicate checks and the final parsing module are pending. |
+| Parsing | Partial | Integer range validation and duplicate checks are implemented; flags and final CLI parsing are pending. |
 | Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
 | `assign_index` | Done | Assigns a relative index without changing stack order. |
 | Small sorts | Partial | `sort_3` is implemented; `sort_5` is pending. |
