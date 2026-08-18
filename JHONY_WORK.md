@@ -172,22 +172,22 @@ das operações continua no `stdout`; benchmark e erros vão para `stderr`.
 
 ## Dia 5 — Recuperação de B no `medium_sort`
 
-O `medium_sort` divide os índices em faixas, chamadas *chunks*. A parte do
+O `medium_sort` divide os índices em faixas, chamadas blocos. A parte do
 Guilherme envia os índices de cada faixa de A para B. A parte do Jhony recebe B
 e precisa devolvê-la para A em ordem.
 
 O contrato compartilhado definido no header é:
 
 ```c
-int	medium_chunk_size(int size);
-void	medium_push_chunks(t_stack **a, t_stack **b, int chunk_size);
+int	medium_block_size(int size);
+void	medium_push_blocks(t_stack **a, t_stack **b, int block_size);
 void	medium_restore(t_stack **a, t_stack **b);
 ```
 
-`medium_chunk_size` calcula `ceil(sqrt(n))` sem usar a biblioteca matemática.
-`medium_push_chunks` já foi implementada pelo Guilherme. Ela espera índices
-calculados por `assign_index`, recebe o tamanho do chunk e deixa A vazia. Ao
-enviar a metade menor de cada chunk, ela aplica `rb` para manter esses valores
+`medium_block_size` calcula `ceil(sqrt(n))` sem usar a biblioteca matemática.
+`medium_push_blocks` já foi implementada pelo Guilherme. Ela espera índices
+calculados por `assign_index`, recebe o tamanho do bloco e deixa A vazia. Ao
+enviar a metade menor de cada bloco, ela aplica `rb` para manter esses valores
 mais abaixo em B. O Jhony deve implementar `medium_restore`, consumindo B até
 ela ficar vazia e deixando A ordenada.
 

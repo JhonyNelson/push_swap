@@ -166,7 +166,7 @@ e receber uma sequência válida de operações.
 ### Guilherme
 
 - Implementar a lógica principal do `medium_sort`.
-- Definir a divisão dos elementos em chunks/faixas.
+- Definir a divisão dos elementos em blocos/faixas.
 - Implementar o envio dos elementos de A para B.
 - Controlar a estratégia de seleção dos elementos.
 
@@ -189,7 +189,7 @@ Comparar os resultados:
 500 números
 ```
 
-E ajustar o tamanho dos chunks.
+E ajustar o tamanho dos blocos.
 
 ### Meta
 

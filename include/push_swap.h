@@ -78,9 +78,9 @@ void				simple_sort(t_stack **a, t_stack **b);
 
 /* 2. Médio O(n*sqrt(n)) */
 void				medium_sort(t_stack **a, t_stack **b);
-int					medium_chunk_size(int size);
-void				medium_push_chunks(t_stack **a, t_stack **b,
-						int chunk_size);
+int					medium_block_size(int size);
+void				medium_push_blocks(t_stack **a, t_stack **b,
+						int block_size);
 void				medium_restore(t_stack **a, t_stack **b);
 
 /* 3. Complexo O(n log n) - Ex: Radix */

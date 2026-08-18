@@ -106,7 +106,47 @@ manipulating the linked list directly.
 
 ---
 
-### 3. Disorder Metric — `compute_disorder` (planned)
+### 3. Push_swap Instruction Set
+
+The program may print only the following instructions to `stdout`. The `ft_*`
+functions are internal helpers; the names below are the actual Push_swap
+language consumed by the checker.
+
+| Instruction | Meaning |
+|---|---|
+| `sa` | Swaps the first two elements of A. |
+| `sb` | Swaps the first two elements of B. |
+| `ss` | Executes `sa` and `sb` together. |
+| `pa` | Moves the top element of B to the top of A. |
+| `pb` | Moves the top element of A to the top of B. |
+| `ra` | Moves the top of A to its bottom. |
+| `rb` | Moves the top of B to its bottom. |
+| `rr` | Executes `ra` and `rb` together. |
+| `rra` | Moves the bottom of A to its top. |
+| `rrb` | Moves the bottom of B to its top. |
+| `rrr` | Executes `rra` and `rrb` together. |
+
+An instruction that cannot change its target stack, such as `sa` on a stack
+with fewer than two elements, leaves that stack unchanged.
+
+### 4. How the Algorithms Use the Instructions
+
+The algorithms build a program from the instruction set above. They never
+change list pointers directly.
+
+- `simple_sort` repeatedly brings the minimum value of A to the top with `ra`
+  or `rra`, sends it to B with `pb`, sorts the final three elements, then uses
+  `pa` to rebuild A in ascending order.
+- `medium_sort` divides the indexes into blocks. Each block is sent from A to
+  B with `pb` and `ra`; B is then recovered in descending-index order with
+  `rb`/`rrb` and `pa`.
+- `complex_sort` uses Radix LSD on `index`: a `0` bit uses `pb`, a `1` bit
+  uses `ra`, and every pass ends by bringing B back with `pa`.
+- `adaptive_sort` selects one of the strategies based on the disorder metric.
+
+---
+
+### 5. Disorder Metric — `compute_disorder` (planned)
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -124,7 +164,7 @@ A value closer to `0` represents a stack that is closer to being sorted, while a
 
 ---
 
-### 4. Indexing — `assign_index`
+### 6. Indexing — `assign_index`
 
 For the Radix Sort to handle negative numbers properly, the original values are mapped to positive indexes.
 
@@ -142,7 +182,7 @@ The Radix algorithm then operates on the binary representation of these indexes 
 
 ---
 
-### 5. The Four Strategies
+### 7. The Four Strategies
 
 #### Simple — O(n²)
 
@@ -163,7 +203,7 @@ Status: implemented in `src/sorting/simple_sort.c`.
 
 #### Medium — O(n√n)
 
-A chunk-based sorting strategy.
+A block-based sorting strategy.
 
 The stack is divided into blocks with a size based on `sqrt(n)`.
 
