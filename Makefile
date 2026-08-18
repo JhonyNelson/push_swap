@@ -23,6 +23,7 @@ SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/sorting/simple_sort.c \
 			$(SRC_DIR)/sorting/complex_sort.c \
 			$(SRC_DIR)/sorting/medium_blocks.c \
+			$(SRC_DIR)/sorting/medium_restore.c \
 			$(SRC_DIR)/sorting/small_sort.c
 
 OBJS        = $(SRCS:.c=.o)
