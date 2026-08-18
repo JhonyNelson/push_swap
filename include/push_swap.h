@@ -32,6 +32,12 @@ typedef struct s_input
 	int				count;
 }					t_input;
 
+# define STRATEGY_INVALID -1
+# define STRATEGY_SIMPLE 0
+# define STRATEGY_MEDIUM 1
+# define STRATEGY_COMPLEX 2
+# define STRATEGY_ADAPTIVE 3
+
 /* ================= FUNÇÕES BASE ================= */
 
 t_stack				*ft_new_node(int value);

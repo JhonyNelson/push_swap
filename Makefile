@@ -13,6 +13,7 @@ SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/stack/stack_creation_tools.c \
 			$(SRC_DIR)/parsing/input_validation.c \
 			$(SRC_DIR)/parsing/input_normalization.c \
+			$(SRC_DIR)/parsing/flags.c \
 			$(SRC_DIR)/operations/swap.c \
 			$(SRC_DIR)/operations/push.c \
 			$(SRC_DIR)/operations/rotate.c \
