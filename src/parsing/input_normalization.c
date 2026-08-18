@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   input_normalization.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guilherme <guilherme@student.42.fr>        +#+  +:+       +#+        */
+/*   By: guilamar <guilamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/17 22:40:00 by guilherme         #+#    #+#             */
-/*   Updated: 2026/08/17 22:40:00 by guilherme        ###   ########.fr       */
+/*   Updated: 2026/08/18 15:56:16 by guilamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
