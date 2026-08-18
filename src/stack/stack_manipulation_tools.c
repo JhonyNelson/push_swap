@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   stack_manipulation_tools.c                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: guilherme <guilherme@student.42.fr>        +#+  +:+       +#+        */
+/*   By: guilamar <guilamar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/08/12 22:27:17 by guilherme         #+#    #+#             */
-/*   Updated: 2026/08/13 01:15:36 by guilherme        ###   ########.fr       */
+/*   Updated: 2026/08/18 15:56:07 by guilamar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
