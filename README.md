@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by guilamar and Jhony.*
+*This project has been created as part of the 42 curriculum by guilamar, jhcosta-.*
 
 # push_swap
 
