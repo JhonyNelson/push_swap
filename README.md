@@ -86,9 +86,8 @@ initialization, cleanup and size calculation. `src/stack/stack_manipulation_tool
 contains the linked-list insertion helpers. This is functional, but the target
 architecture above separates parsing from stack internals as the project grows.
 
-The operation files `rotate.c` and `reverse_rotate.c` already exist. The next
-files to create are `operations/swap.c` and `operations/push.c`, because their
-functions are declared in `push_swap.h` but have no implementation yet.
+The operation files `swap.c`, `push.c`, `rotate.c` and `reverse_rotate.c`
+implement all Day 2 stack operations.
 
 `validation.c`, `stack_init.c`, the metrics files and the sorting files should
 be created only when their corresponding functions are implemented. In
