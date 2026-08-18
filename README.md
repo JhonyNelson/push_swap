@@ -330,5 +330,3 @@ AI assisted the project as a tutor and code-review companion by:
 - Reviewing pointer handling, memory management and Norminette constraints.
 - Assisting with project structure and README documentation.
 
-The students remain responsible for understanding, reviewing and integrating
-the project code.
