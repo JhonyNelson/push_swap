@@ -10,9 +10,30 @@ In this version (v1.1), the project goes beyond simple sorting: we must implemen
 
 ---
 
-## Algorithm & Technical Choices
+## Project Status
 
-The implementation is structured around data structure management, disorder calculation, and the four required algorithmic strategies.
+This README describes the final architecture and intended behavior for version
+1.1. The project is still under development; the table below is the source of
+truth for what is available in the current codebase.
+
+| Module | Status | Notes |
+|---|---|---|
+| Build and Libft | Done | Compiles with `-Wall -Wextra -Werror`. |
+| Stack structure | Done | Doubly linked list, creation, insertion, size and cleanup. |
+| Parsing | Partial | Basic argument validation exists; duplicate checks and the final parsing module are pending. |
+| Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
+| `assign_index` | Done | Assigns a relative index without changing stack order. |
+| Small sorts | Partial | `sort_3` is implemented; `sort_5` is pending. |
+| Disorder and strategies | Pending | `compute_disorder`, `simple`, `medium`, `complex` and `adaptive` are not implemented yet. |
+| CLI and benchmark | Pending | Flags, operation counter and benchmark output are not available yet. |
+| Main integration | Pending | `main` still prints the input stack for development. |
+
+---
+
+## Final Architecture & Technical Choices
+
+The final implementation is structured around data structure management,
+disorder calculation and four sorting strategies.
 
 ### 1. Data Structure — Doubly Linked List
 
@@ -41,8 +62,8 @@ pointer management isolated from the sorting algorithms:
 ├── src/
 │   ├── main.c
 │   ├── stack/
-│   │   ├── nodes.c
-│   │   └── list.c
+│   │   ├── stack_creation_tools.c
+│   │   └── stack_manipulation_tools.c
 │   ├── parsing/
 │   │   ├── validation.c
 │   │   └── stack_init.c
@@ -71,28 +92,13 @@ pointer management isolated from the sorting algorithms:
 | Layer | Responsibility | Functions |
 |---|---|---|
 | `main.c` | Coordinates parsing, setup, sorting and cleanup. | `main` |
-| `stack/nodes.c` | Creates a stack node. | `ft_new_node` |
-| `stack/list.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front`, `ft_stacksize`, `ft_freestack` |
+| `stack/stack_creation_tools.c` | Creates nodes, initializes and frees stacks. | `ft_new_node`, `init_stack`, `ft_stacksize`, `ft_freestack` |
+| `stack/stack_manipulation_tools.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front` |
 | `parsing/validation.c` | Validates numeric input and duplicates. | `ft_isdigit_str`, `ft_check_args`, `ft_check_duplicates` |
 | `parsing/stack_init.c` | Creates stack A from validated arguments. | `init_stack` |
 | `operations/*.c` | Performs and prints the allowed `push_swap` instructions. | `sa`/`sb`/`ss`, `pa`/`pb`, `ra`/`rb`/`rr`, `rra`/`rrb`/`rrr` |
 | `metrics/*.c` | Builds relative indexes and measures disorder. | `assign_index`, `compute_disorder` |
 | `sorting/*.c` | Sorts using only the operations layer. | `sort_3`, `sort_5`, `simple_sort`, `medium_sort`, `complex_sort`, `adaptive_sort` |
-
-#### Current implementation status
-
-Currently, `src/stack/stack_creation_tools.c` combines node creation, stack
-initialization, cleanup and size calculation. `src/stack/stack_manipulation_tools.c`
-contains the linked-list insertion helpers. This is functional, but the target
-architecture above separates parsing from stack internals as the project grows.
-
-The operation files `swap.c`, `push.c`, `rotate.c` and `reverse_rotate.c`
-implement all Day 2 stack operations.
-
-`validation.c`, `stack_init.c`, the metrics files and the sorting files should
-be created only when their corresponding functions are implemented. In
-particular, `ft_check_args` currently lives in `libft`; it should be moved to
-`src/parsing/validation.c` when the parsing module is consolidated.
 
 The `operations` layer is the only layer that modifies stack pointers.
 Sorting algorithms must use those operations rather than manipulating the
@@ -100,7 +106,7 @@ linked list directly.
 
 ---
 
-### 3. Disorder Metric — `compute_disorder`
+### 3. Disorder Metric — `compute_disorder` (planned)
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -136,7 +142,7 @@ The Radix algorithm then operates on the binary representation of these indexes 
 
 ---
 
-### 5. The Four Strategies
+### 5. The Four Strategies (planned)
 
 #### Simple — O(n²)
 
@@ -199,9 +205,9 @@ This allows the program to adapt its behavior to the initial state of the input 
 
 ---
 
-## Edge Cases
+## Edge Cases for the Final Version
 
-The following cases are handled:
+The final program must handle the following cases:
 
 - Non-integer arguments.
 - Values exceeding `INT_MAX`.
@@ -213,7 +219,7 @@ The following cases are handled:
 - Negative numbers.
 - Inputs containing only 2 or 3 elements.
 
-Invalid input prints:
+For invalid input, the final program prints:
 
 ```text
 Error
@@ -223,7 +229,8 @@ to `stderr`.
 
 Empty input or `argc < 2` exits silently.
 
-For inputs of size 2 or 3, hardcoded optimal sequences are used to minimize the number of operations.
+For inputs of size 2 or 3, hardcoded optimal sequences are used to minimize
+the number of operations. Currently, `sort_3` is available.
 
 ---
 
@@ -258,11 +265,14 @@ at the project root.
 
 ---
 
-## 2. Usage
+## 2. Usage (final version)
 
 Run the program with a list of integers as arguments.
 
 Optional flags can be passed before the numbers.
+
+> **Current limitation:** the flags and sorting integration below describe the
+> final interface. They are not implemented in the current executable yet.
 
 ### Flags
 
@@ -312,15 +322,13 @@ Test invalid input:
 
 ## AI Usage
 
-AI was used strictly as a **Socratic tutor** throughout this project. It was never asked to generate ready-to-use code.
-
-Instead, AI guided the reasoning process through questions by:
+AI assisted the project as a tutor and code-review companion by:
 
 - Pointing out potential bugs.
 - Explaining why a given pointer manipulation was incorrect.
-- Asking the students to identify and fix issues independently.
-- Assisting with the conceptual understanding of bitwise operators in Radix Sort.
-- Explaining complexity analysis of stack operations.
-- Helping structure and review the README.
+- Explaining data structures, stack operations and algorithmic trade-offs.
+- Reviewing pointer handling, memory management and Norminette constraints.
+- Assisting with project structure and README documentation.
 
-**All code was written by the students.**
+The students remain responsible for understanding, reviewing and integrating
+the project code.
