@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by guilamar, jhcosta-.*
+*This activity has been created as part of the 42 curriculum by guilamar, jhcosta-.*
 
 # push_swap
 
@@ -12,9 +12,7 @@ In this version (v1.1), the project goes beyond simple sorting: we must implemen
 
 ## Project Status
 
-This README describes the final architecture and intended behavior for version
-1.1. The project is still under development; the table below is the source of
-truth for what is available in the current codebase.
+This README describes the final architecture and behavior of version 1.1.
 
 | Module | Status | Notes |
 |---|---|---|
@@ -275,8 +273,8 @@ to `stderr`.
 
 Empty input or `argc < 2` exits silently.
 
-For inputs of size 2 or 3, hardcoded optimal sequences are used to minimize
-the number of operations. Currently, `sort_3` is available.
+For inputs of size 2 or 3, short dedicated sequences minimize the number of
+operations. Inputs up to five values use `sort_5` when appropriate.
 
 ---
 
@@ -422,12 +420,28 @@ checker.
 
 ---
 
+## Contributions
+
+This project was developed by exactly two learners, who collaborated on the
+integration and understand the complete codebase.
+
+| Learner | Main responsibilities |
+|---|---|
+| `guilamar` | Stack construction, input normalization and validation, swap/push operations, indexing, `simple_sort`, `complex_sort`, block distribution for `medium_sort`, benchmark integration and documentation. |
+| `jhcosta-` | Rotate/reverse-rotate operations, disorder metric, `sort_5`, flag parsing, restoration of B in `medium_sort`, and algorithm integration/review. |
+
+Both learners contributed to final testing, memory verification, strategy
+integration and the README.
+
+---
+
 ## AI Usage
 
 AI assisted the project as a tutor and code-review companion by:
 
-- Pointing out potential bugs.
-- Explaining why a given pointer manipulation was incorrect.
 - Explaining data structures, stack operations and algorithmic trade-offs.
-- Reviewing pointer handling, memory management and Norminette constraints.
-- Assisting with project structure and README documentation.
+- Reviewing pointer handling, memory management, error handling and Norminette.
+- Assisting with the layered project structure, benchmark design and README.
+- Helping validate the program with checker binaries and Valgrind.
+
+All final implementation choices were reviewed and understood by both learners.
