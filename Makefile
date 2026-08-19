@@ -18,7 +18,9 @@ SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/operations/push.c \
 			$(SRC_DIR)/operations/rotate.c \
 			$(SRC_DIR)/operations/reverse_rotate.c \
+			$(SRC_DIR)/operations/operation_output.c \
 			$(SRC_DIR)/metrics/disorder.c \
+			$(SRC_DIR)/metrics/benchmark.c \
 			$(SRC_DIR)/metrics/index.c \
 			$(SRC_DIR)/sorting/simple_sort.c \
 			$(SRC_DIR)/sorting/strategy.c \

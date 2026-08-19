@@ -46,7 +46,7 @@ int	parse_flags(int argc, char **argv, int *strategy, int *bench)
 
 	if (!strategy || !bench)
 		return (-1);
-	*strategy = STRATEGY_COMPLEX;
+	*strategy = STRATEGY_ADAPTIVE;
 	*bench = 0;
 	index = 1;
 	selected = 0;

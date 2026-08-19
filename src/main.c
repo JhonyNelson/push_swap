@@ -18,30 +18,36 @@ static int	print_error(void)
 	return (1);
 }
 
+static int	finish_program(t_stack **a, t_stack **b, t_metrics *metrics,
+		int success)
+{
+	if (success && metrics->bench)
+		print_benchmark(metrics);
+	ft_freestack(a);
+	ft_freestack(b);
+	if (!success)
+		return (print_error());
+	return (0);
+}
+
 int	main(int argc, char **argv)
 {
-	t_stack	*stack_a;
-	t_stack	*stack_b;
-	int		strategy;
-	int		bench;
-	int		first;
+	t_stack		*stack_a;
+	t_stack		*stack_b;
+	t_metrics	metrics;
+	int			first;
 
 	if (argc < 2)
 		return (0);
-	first = parse_flags(argc, argv, &strategy, &bench);
-	if (first < 0 || first == argc || bench)
+	ft_bzero(&metrics, sizeof(t_metrics));
+	first = parse_flags(argc, argv, &metrics.strategy, &metrics.bench);
+	if (first < 0 || first == argc)
 		return (print_error());
-	stack_a = init_stack_from_args(argc, argv, first);
+	stack_a = init_stack_from_args(argc, argv, first, &metrics);
 	if (!stack_a)
 		return (print_error());
 	stack_b = NULL;
-	if (!execute_strategy(&stack_a, &stack_b, strategy))
-	{
-		ft_freestack(&stack_a);
-		ft_freestack(&stack_b);
-		return (print_error());
-	}
-	ft_freestack(&stack_a);
-	ft_freestack(&stack_b);
-	return (0);
+	metrics.disorder = compute_disorder(stack_a);
+	return (finish_program(&stack_a, &stack_b, &metrics,
+			execute_strategy(&stack_a, &stack_b, &metrics)));
 }

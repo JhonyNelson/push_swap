@@ -12,18 +12,50 @@
 
 #include "push_swap.h"
 
-int	execute_strategy(t_stack **a, t_stack **b, int strategy)
+int	adaptive_strategy(double disorder)
 {
-	if (!a || !*a || !b)
-		return (0);
-	if (ft_stackis_sorted(*a))
-		return (1);
-	assign_index(a);
+	if (disorder < 0.2)
+		return (STRATEGY_SIMPLE);
+	if (disorder < 0.5)
+		return (STRATEGY_MEDIUM);
+	return (STRATEGY_COMPLEX);
+}
+
+void	adaptive_sort(t_stack **a, t_stack **b, double disorder)
+{
+	int	strategy;
+
+	strategy = adaptive_strategy(disorder);
 	if (strategy == STRATEGY_SIMPLE)
 		simple_sort(a, b);
 	else if (strategy == STRATEGY_MEDIUM)
 		medium_sort(a, b);
-	else if (strategy == STRATEGY_COMPLEX)
+	else
+		complex_sort(a, b);
+}
+
+int	execute_strategy(t_stack **a, t_stack **b, t_metrics *metrics)
+{
+	if (!a || !*a || !b || !metrics)
+		return (0);
+	if (metrics->strategy == STRATEGY_ADAPTIVE && ft_stackis_sorted(*a))
+	{
+		metrics->strategy = adaptive_strategy(metrics->disorder);
+		return (1);
+	}
+	if (ft_stackis_sorted(*a))
+		return (1);
+	assign_index(a);
+	if (metrics->strategy == STRATEGY_ADAPTIVE)
+	{
+		metrics->strategy = adaptive_strategy(metrics->disorder);
+		adaptive_sort(a, b, metrics->disorder);
+	}
+	else if (metrics->strategy == STRATEGY_SIMPLE)
+		simple_sort(a, b);
+	else if (metrics->strategy == STRATEGY_MEDIUM)
+		medium_sort(a, b);
+	else if (metrics->strategy == STRATEGY_COMPLEX)
 		complex_sort(a, b);
 	else
 		return (0);

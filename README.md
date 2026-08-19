@@ -24,9 +24,9 @@ truth for what is available in the current codebase.
 | Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
 | `assign_index` | Done | Assigns a relative index without changing stack order. |
 | Small sorts | Done | `sort_3` and `sort_5` are implemented. |
-| Disorder and strategies | Partial | Disorder, `simple`, `medium` and `complex` are implemented; `adaptive` is pending. |
-| CLI and benchmark | Partial | `--simple`, `--medium` and `--complex` work; benchmark is pending. |
-| Main integration | Partial | Executes the available strategies and prints only operations. |
+| Disorder and strategies | Done | All four strategies select and sort correctly. |
+| CLI and benchmark | Done | All flags work; metrics are sent exclusively to `stderr`. |
+| Main integration | Done | Coordinates parsing, selection, sorting, benchmark and cleanup. |
 
 ---
 
@@ -234,10 +234,10 @@ Status: implemented in `src/sorting/complex_sort.c` using LSD Radix Sort.
 
 ---
 
-#### Adaptive — pending
+#### Adaptive
 
-`compute_disorder` is implemented, but `adaptive_sort` still needs to use it
-to select an appropriate sorting algorithm.
+`adaptive_sort` calculates the regime before any move and chooses the strategy
+that matches it. This is also the default strategy when no selector is given.
 
 The current thresholds are:
 
@@ -326,7 +326,7 @@ of both:
 
 Optional flags can be passed before the numbers.
 
-The current default is `complex`, because `adaptive_sort` is still pending.
+The default strategy is `adaptive`.
 
 ### Flags
 
@@ -335,12 +335,12 @@ The current default is `complex`, because `adaptive_sort` is still pending.
 | `--simple` | Forces the O(n²) algorithm. |
 | `--medium` | Forces the O(n√n) algorithm. |
 | `--complex` | Forces the O(n log n) algorithm. |
-| `--adaptive` | Reserved for the adaptive strategy; currently returns `Error`. |
-| `--bench` | Reserved for benchmark metrics; currently returns `Error`. |
+| `--adaptive` | Chooses a strategy from the measured disorder. This is the default. |
+| `--bench` | Sends disorder, chosen strategy and operation counters to `stderr`. |
 
 ### Examples
 
-Default behavior using the complex strategy:
+Default behavior using the adaptive strategy:
 
 ```bash
 ./push_swap 4 67 3 87 23
@@ -408,9 +408,9 @@ wc -l /tmp/push_swap_operations
 ```
 
 The checker verifies the final stack state; it does not replace tests for
-parsing, memory leaks, operation counts or the required benchmark output.
-When `--bench` is implemented, its metrics must go to `stderr`, so they do not
-interfere with the operation stream consumed by the checker.
+parsing, memory leaks or operation counts. Benchmark metrics already go to
+`stderr`, so they do not interfere with the operation stream consumed by the
+checker.
 
 ---
 

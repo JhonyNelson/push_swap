@@ -12,7 +12,7 @@
 
 #include "push_swap.h"
 
-t_stack	*ft_new_node(int value)
+t_stack	*ft_new_node(int value, t_metrics *metrics)
 {
 	t_stack	*new_node;
 
@@ -21,12 +21,13 @@ t_stack	*ft_new_node(int value)
 		return (NULL);
 	new_node->value = value;
 	new_node->index = -1;
+	new_node->metrics = metrics;
 	new_node->prev = NULL;
 	new_node->next = NULL;
 	return (new_node);
 }
 
-t_stack	*init_stack(int count, char **values)
+t_stack	*init_stack(int count, char **values, t_metrics *metrics)
 {
 	t_stack	*stack_a;
 	t_stack	*new_node;
@@ -36,7 +37,7 @@ t_stack	*init_stack(int count, char **values)
 	i = 0;
 	while (i < count)
 	{
-		new_node = ft_new_node(ft_atoi(values[i]));
+		new_node = ft_new_node(ft_atoi(values[i]), metrics);
 		if (!new_node)
 		{
 			ft_freestack(&stack_a);
@@ -48,7 +49,8 @@ t_stack	*init_stack(int count, char **values)
 	return (stack_a);
 }
 
-t_stack	*init_stack_from_args(int argc, char **argv, int first)
+t_stack	*init_stack_from_args(int argc, char **argv, int first,
+		t_metrics *metrics)
 {
 	t_stack	*stack;
 	t_input	input;
@@ -60,7 +62,7 @@ t_stack	*init_stack_from_args(int argc, char **argv, int first)
 		free_input(&input);
 		return (NULL);
 	}
-	stack = init_stack(input.count, input.values);
+	stack = init_stack(input.count, input.values, metrics);
 	free_input(&input);
 	if (!stack || !ft_check_duplicates(stack))
 	{
