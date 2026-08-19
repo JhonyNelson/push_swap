@@ -21,6 +21,7 @@ SRCS        = $(SRC_DIR)/main.c	\
 			$(SRC_DIR)/metrics/disorder.c \
 			$(SRC_DIR)/metrics/index.c \
 			$(SRC_DIR)/sorting/simple_sort.c \
+			$(SRC_DIR)/sorting/strategy.c \
 			$(SRC_DIR)/sorting/complex_sort.c \
 			$(SRC_DIR)/sorting/medium_blocks.c \
 			$(SRC_DIR)/sorting/medium_restore.c \

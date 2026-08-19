@@ -64,3 +64,19 @@ void	medium_push_blocks(t_stack **a, t_stack **b, int block_size)
 			ra(a);
 	}
 }
+
+void	medium_sort(t_stack **a, t_stack **b)
+{
+	int	size;
+
+	if (!a || !*a || !b)
+		return ;
+	size = ft_stacksize(*a);
+	if (size <= 5)
+	{
+		sort_5(a, b);
+		return ;
+	}
+	medium_push_blocks(a, b, medium_block_size(size));
+	medium_restore(a, b);
+}

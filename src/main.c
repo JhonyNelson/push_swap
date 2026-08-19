@@ -12,16 +12,6 @@
 
 #include "push_swap.h"
 
-void	ft_print_stack(t_stack *stack)
-{
-	while (stack)
-	{
-		ft_putnbr_fd(stack->value, 1);
-		ft_putchar_fd('\n', 1);
-		stack = stack->next;
-	}
-}
-
 static int	print_error(void)
 {
 	ft_putstr_fd("Error\n", 2);
@@ -31,25 +21,27 @@ static int	print_error(void)
 int	main(int argc, char **argv)
 {
 	t_stack	*stack_a;
-	t_input	input;
+	t_stack	*stack_b;
+	int		strategy;
+	int		bench;
+	int		first;
 
 	if (argc < 2)
 		return (0);
-	if (!normalize_args(argc - 1, argv + 1, &input))
+	first = parse_flags(argc, argv, &strategy, &bench);
+	if (first < 0 || first == argc || bench)
 		return (print_error());
-	if (!validate_numbers(input.count, input.values, 0))
-	{
-		free_input(&input);
+	stack_a = init_stack_from_args(argc, argv, first);
+	if (!stack_a)
 		return (print_error());
-	}
-	stack_a = init_stack(input.count, input.values);
-	free_input(&input);
-	if (!stack_a || !ft_check_duplicates(stack_a))
+	stack_b = NULL;
+	if (!execute_strategy(&stack_a, &stack_b, strategy))
 	{
 		ft_freestack(&stack_a);
+		ft_freestack(&stack_b);
 		return (print_error());
 	}
-	ft_print_stack(stack_a);
 	ft_freestack(&stack_a);
+	ft_freestack(&stack_b);
 	return (0);
 }

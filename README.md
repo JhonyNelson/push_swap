@@ -20,13 +20,13 @@ truth for what is available in the current codebase.
 |---|---|---|
 | Build and Libft | Done | Compiles with `-Wall -Wextra -Werror`. |
 | Stack structure | Done | Doubly linked list, creation, insertion, size and cleanup. |
-| Parsing | Partial | Quoted input, integer range validation and duplicate checks are implemented; flags and final CLI parsing are pending. |
+| Parsing | Done | Quoted input, integer range validation, duplicate checks and flags before numbers. |
 | Stack operations | Done | Swap, push, rotate and reverse rotate are implemented. |
 | `assign_index` | Done | Assigns a relative index without changing stack order. |
-| Small sorts | Partial | `sort_3` is implemented; `sort_5` is pending. |
-| Disorder and strategies | Partial | `simple_sort` and `complex_sort` are implemented; `compute_disorder`, `medium` and `adaptive` are pending. |
-| CLI and benchmark | Pending | Flags, operation counter and benchmark output are not available yet. |
-| Main integration | Pending | `main` still prints the input stack for development. |
+| Small sorts | Done | `sort_3` and `sort_5` are implemented. |
+| Disorder and strategies | Partial | Disorder, `simple`, `medium` and `complex` are implemented; `adaptive` is pending. |
+| CLI and benchmark | Partial | `--simple`, `--medium` and `--complex` work; benchmark is pending. |
+| Main integration | Partial | Executes the available strategies and prints only operations. |
 
 ---
 
@@ -65,8 +65,9 @@ pointer management isolated from the sorting algorithms:
 │   │   ├── stack_creation_tools.c
 │   │   └── stack_manipulation_tools.c
 │   ├── parsing/
-│   │   ├── validation.c
-│   │   └── stack_init.c
+│   │   ├── flags.c
+│   │   ├── input_normalization.c
+│   │   └── input_validation.c
 │   ├── operations/
 │   │   ├── swap.c
 │   │   ├── push.c
@@ -78,9 +79,11 @@ pointer management isolated from the sorting algorithms:
 │   └── sorting/
 │       ├── small_sort.c
 │       ├── simple_sort.c
-│       ├── medium_sort.c
+│       ├── strategy.c
+│       ├── medium_blocks.c
+│       ├── medium_restore.c
 │       ├── complex_sort.c
-│       └── adaptive_sort.c
+│       └── adaptive_sort.c (pending)
 ├── libft/
 ├── Makefile
 ├── README.md
@@ -91,14 +94,14 @@ pointer management isolated from the sorting algorithms:
 
 | Layer | Responsibility | Functions |
 |---|---|---|
-| `main.c` | Coordinates parsing, setup, sorting and cleanup. | `main` |
-| `stack/stack_creation_tools.c` | Creates nodes, initializes and frees stacks. | `ft_new_node`, `init_stack`, `ft_stacksize`, `ft_freestack` |
-| `stack/stack_manipulation_tools.c` | Maintains the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front` |
+| `main.c` | Coordinates the program flow only. | `main` |
+| `stack/stack_creation_tools.c` | Creates, builds and frees stacks. | `ft_new_node`, `init_stack`, `init_stack_from_args`, `ft_stacksize`, `ft_freestack` |
+| `stack/stack_manipulation_tools.c` | Maintains and inspects the doubly linked-list structure. | `ft_stacklast`, `ft_stackadd_back`, `ft_stackadd_front`, `ft_stackis_sorted` |
 | `parsing/input_validation.c` | Validates numeric input, range and duplicates. | `ft_str_is_digit`, `ft_check_args`, `parse_int`, `validate_numbers`, `ft_check_duplicates` |
 | `parsing/stack_init.c` | Creates stack A from validated arguments. | `init_stack` |
 | `operations/*.c` | Performs and prints the allowed `push_swap` instructions. | `sa`/`sb`/`ss`, `pa`/`pb`, `ra`/`rb`/`rr`, `rra`/`rrb`/`rrr` |
 | `metrics/*.c` | Builds relative indexes and measures disorder. | `assign_index`, `compute_disorder` |
-| `sorting/*.c` | Sorts using only the operations layer. | `sort_3`, `sort_5`, `simple_sort`, `medium_sort`, `complex_sort`, `adaptive_sort` |
+| `sorting/*.c` | Selects and runs algorithms using only the operations layer. | `execute_strategy`, `sort_3`, `sort_5`, `simple_sort`, `medium_sort`, `complex_sort`, `adaptive_sort` |
 
 The `operations` layer uses the stack helpers to perform the allowed
 instructions. Sorting algorithms must use those operations rather than
@@ -146,7 +149,7 @@ change list pointers directly.
 
 ---
 
-### 5. Disorder Metric — `compute_disorder` (planned)
+### 5. Disorder Metric — `compute_disorder`
 
 Before any sorting occurs, the program calculates a disorder metric represented by a `double` between `0` and `1`.
 
@@ -231,11 +234,10 @@ Status: implemented in `src/sorting/complex_sort.c` using LSD Radix Sort.
 
 ---
 
-#### Adaptive
+#### Adaptive — pending
 
-The adaptive strategy is the default strategy.
-
-It uses `compute_disorder` to evaluate the initial state of stack A and automatically selects an appropriate sorting algorithm.
+`compute_disorder` is implemented, but `adaptive_sort` still needs to use it
+to select an appropriate sorting algorithm.
 
 The current thresholds are:
 
@@ -309,7 +311,7 @@ at the project root.
 
 ---
 
-## 2. Usage (final version)
+## 2. Usage
 
 Run the program with a list of integers as arguments.
 
@@ -324,8 +326,7 @@ of both:
 
 Optional flags can be passed before the numbers.
 
-> **Current limitation:** the flags and sorting integration below describe the
-> final interface. They are not implemented in the current executable yet.
+The current default is `complex`, because `adaptive_sort` is still pending.
 
 ### Flags
 
@@ -334,12 +335,12 @@ Optional flags can be passed before the numbers.
 | `--simple` | Forces the O(n²) algorithm. |
 | `--medium` | Forces the O(n√n) algorithm. |
 | `--complex` | Forces the O(n log n) algorithm. |
-| `--adaptive` | Uses the disorder metric to choose the strategy. This is the default. |
-| `--bench` | Prints benchmark metrics such as disorder, strategy, and operation count to `stderr`. |
+| `--adaptive` | Reserved for the adaptive strategy; currently returns `Error`. |
+| `--bench` | Reserved for benchmark metrics; currently returns `Error`. |
 
 ### Examples
 
-Default behavior using the adaptive strategy:
+Default behavior using the complex strategy:
 
 ```bash
 ./push_swap 4 67 3 87 23

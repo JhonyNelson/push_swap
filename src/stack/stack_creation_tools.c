@@ -48,6 +48,28 @@ t_stack	*init_stack(int count, char **values)
 	return (stack_a);
 }
 
+t_stack	*init_stack_from_args(int argc, char **argv, int first)
+{
+	t_stack	*stack;
+	t_input	input;
+
+	if (!normalize_args(argc - first, argv + first, &input))
+		return (NULL);
+	if (!validate_numbers(input.count, input.values, 0))
+	{
+		free_input(&input);
+		return (NULL);
+	}
+	stack = init_stack(input.count, input.values);
+	free_input(&input);
+	if (!stack || !ft_check_duplicates(stack))
+	{
+		ft_freestack(&stack);
+		return (NULL);
+	}
+	return (stack);
+}
+
 void	ft_freestack(t_stack **stack)
 {
 	t_stack	*temp;

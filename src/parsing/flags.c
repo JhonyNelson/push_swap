@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   flags.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: guilamar <guilamar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/08/18 16:30:00 by guilamar          #+#    #+#             */
+/*   Updated: 2026/08/18 16:30:00 by guilamar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "push_swap.h"
 
 static int	get_strategy(char *flag)
@@ -27,14 +39,14 @@ static int	set_strategy(char *flag, int *strategy, int *selected)
 	return (1);
 }
 
-void	parse_flags(int argc, char **argv, int *strategy, int *bench)
+int	parse_flags(int argc, char **argv, int *strategy, int *bench)
 {
 	int	index;
 	int	selected;
 
 	if (!strategy || !bench)
-		return ;
-	*strategy = STRATEGY_ADAPTIVE;
+		return (-1);
+	*strategy = STRATEGY_COMPLEX;
 	*bench = 0;
 	index = 1;
 	selected = 0;
@@ -45,8 +57,9 @@ void	parse_flags(int argc, char **argv, int *strategy, int *bench)
 		else if (!set_strategy(argv[index], strategy, &selected))
 		{
 			*strategy = STRATEGY_INVALID;
-			return ;
+			return (-1);
 		}
 		index++;
 	}
+	return (index);
 }

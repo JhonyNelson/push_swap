@@ -45,6 +45,7 @@ t_stack				*ft_stacklast(t_stack *stack);
 void				ft_stackadd_back(t_stack **stack, t_stack *new_node);
 void				ft_stackadd_front(t_stack **stack, t_stack *new_node);
 int					ft_stacksize(t_stack *stack);
+int					ft_stackis_sorted(t_stack *stack);
 void				ft_freestack(t_stack **stack);
 
 /* ================ PARSING & ERROS ================ */
@@ -56,6 +57,7 @@ int					ft_check_duplicates(t_stack *stack);
 int					normalize_args(int argc, char **argv, t_input *input);
 void				free_input(t_input *input);
 t_stack				*init_stack(int count, char **values);
+t_stack				*init_stack_from_args(int argc, char **argv, int first);
 
 /* ================ MOVIMENTOS (OPERATIONS) ================ */
 /* Swap */
@@ -86,12 +88,13 @@ double				compute_disorder(t_stack *stack_a);
 void				assign_index(t_stack **stack_a);
 
 /* ============ SELEÇÃO DE ESTRATÉGIAS (FLAGS) ============ */
-void				parse_flags(int argc, char **argv, int *strategy,
+int					parse_flags(int argc, char **argv, int *strategy,
 						int *bench);
 
 /* ================ ALGORITMOS DE ORDENAÇÃO ================ */
 /* 1. Simples O(n^2) */
 void				simple_sort(t_stack **a, t_stack **b);
+int					execute_strategy(t_stack **a, t_stack **b, int strategy);
 
 /* 2. Médio O(n*sqrt(n)) */
 void				medium_sort(t_stack **a, t_stack **b);

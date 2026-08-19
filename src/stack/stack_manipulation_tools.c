@@ -51,3 +51,14 @@ t_stack	*ft_stacklast(t_stack *stack)
 		stack = stack->next;
 	return (stack);
 }
+
+int	ft_stackis_sorted(t_stack *stack)
+{
+	while (stack && stack->next)
+	{
+		if (stack->value > stack->next->value)
+			return (0);
+		stack = stack->next;
+	}
+	return (1);
+}
