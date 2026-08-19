@@ -254,3 +254,161 @@ Ao estudar cada função, responda a estas três perguntas:
 1. Qual é a pré-condição dela?
 2. O que ela muda em A, B ou nas métricas?
 3. Quem chama essa função e qual será o próximo passo do fluxo?
+
+## Live coding da avaliação: `--countonly`
+
+Na escala, o avaliador pode pedir uma flag que mostre **apenas o total de
+operações**, sem imprimir a lista `sa`, `pb`, `ra` etc. O texto usa
+`--countonly`, mas o exemplo usa `--count-only`. Para ficar protegido, aceite
+os dois nomes.
+
+Não é necessário mudar os algoritmos. O contador já existe em `t_metrics`;
+precisamos apenas informar que a saída das operações deve ser escondida.
+
+### Passo 1 — adicionar o campo no contexto
+
+Arquivo: `include/push_swap.h`.
+
+Dentro de `struct s_metrics`, logo após `bench`, adicione:
+
+```c
+int			count_only;
+```
+
+O `main` já zera toda a struct com `ft_bzero`, portanto esse campo começa como
+`0` automaticamente.
+
+### Passo 2 — fazer o parser reconhecer a nova flag
+
+Arquivo: `include/push_swap.h`.
+
+Altere o prototype de:
+
+```c
+int	parse_flags(int argc, char **argv, int *strategy, int *bench);
+```
+
+para:
+
+```c
+int	parse_flags(int argc, char **argv, int *strategy, int *bench,
+		int *count_only);
+```
+
+Arquivo: `src/parsing/flags.c`.
+
+Adicione este auxiliar antes de `parse_flags`:
+
+```c
+static int	is_count_only(char *flag)
+{
+	return (!ft_strncmp(flag, "--countonly", 12)
+		|| !ft_strncmp(flag, "--count-only", 13));
+}
+```
+
+Depois, altere a assinatura de `parse_flags` para receber `int *count_only`.
+No início da função, valide e inicialize o novo ponteiro:
+
+```c
+if (!strategy || !bench || !count_only)
+	return (-1);
+*count_only = 0;
+```
+
+Dentro do `while` que lê as flags, antes da verificação de `--bench`, adicione:
+
+```c
+if (is_count_only(argv[index]))
+	*count_only = 1;
+else if (!ft_strncmp(argv[index], "--bench", 8))
+	*bench = 1;
+```
+
+O restante do `else if` que chama `set_strategy` continua igual.
+
+### Passo 3 — passar a informação pelo `main`
+
+Arquivo: `src/main.c`.
+
+Troque a chamada atual:
+
+```c
+first = parse_flags(argc, argv, &metrics.strategy, &metrics.bench);
+```
+
+por:
+
+```c
+first = parse_flags(argc, argv, &metrics.strategy, &metrics.bench,
+		&metrics.count_only);
+```
+
+### Passo 4 — esconder cada instrução, mas continuar contando
+
+Arquivo: `src/operations/operation_output.c`.
+
+Em `emit_operation`, os contadores devem continuar antes da saída. Troque a
+última linha:
+
+```c
+write(1, names[operation], ft_strlen(names[operation]));
+```
+
+por:
+
+```c
+if (!stack->metrics->count_only)
+	write(1, names[operation], ft_strlen(names[operation]));
+```
+
+Esse é o ponto principal da alteração: os algoritmos continuam executando as
+mesmas operações e `metrics->total` continua correto; apenas o `stdout` deixa
+de mostrar a lista.
+
+### Passo 5 — imprimir somente o total ao final
+
+Arquivo: `src/main.c`, função `finish_program`.
+
+Antes do bloco atual de benchmark, inclua:
+
+```c
+if (success && metrics->count_only)
+{
+	ft_putnbr_fd(metrics->total, 1);
+	ft_putchar_fd('\n', 1);
+}
+else if (success && metrics->bench)
+	print_benchmark(metrics);
+```
+
+Remova ou substitua o `if (success && metrics->bench)` antigo, para não
+imprimir também o relatório de benchmark quando a intenção for somente contar.
+
+### Demonstração final
+
+Compile e teste:
+
+```bash
+make
+./push_swap --countonly 3 2 1
+./push_swap --count-only 3 2 1
+```
+
+Os dois comandos devem imprimir somente um número seguido de quebra de linha.
+Depois, confirme que o comportamento normal não mudou:
+
+```bash
+ARG="3 2 1"
+./push_swap $ARG | ./checker_linux $ARG
+```
+
+O checker deve responder `OK`.
+
+### Como explicar ao avaliador
+
+> “As operações já passam por `emit_operation`, que é o ponto central de
+> escrita e contagem. Então não precisei alterar os algoritmos: acrescentei um
+> campo no contexto de métricas, o parser preenche esse campo e a função central
+> deixa de escrever no stdout, mas mantém a contagem. No encerramento, o main
+> imprime apenas o total.”
