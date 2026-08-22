@@ -55,6 +55,11 @@ void	complex_sort(t_stack **a, t_stack **b)
 
 	if (!a || !*a || !b)
 		return ;
+	if (ft_stacksize(*a) <= 5)
+	{
+		sort_5(a, b);
+		return ;
+	}
 	bit = 0;
 	max_bits = get_max_bits(*a);
 	while (bit < max_bits)
